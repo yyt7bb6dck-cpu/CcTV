@@ -1,0 +1,26 @@
+services:
+  windows:
+    image: dockurr/windows
+    container_name: windows
+    stdin_open: true # Keeps the session open
+    tty: true        # Provides a virtual terminal
+    environment:
+      VERSION: "11"
+      RAM_SIZE: "8G"
+      CPU_CORES: "4"
+      DISK_SIZE: "180G"
+      USERNAME: "enderman"
+      PASSWORD: "123456"
+    devices:
+      - /dev/kvm
+      - /dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - 8006:8006
+      - 3389:3389/tcp
+      - 3389:3389/udp
+    volumes:
+      - ./windows:/storage
+    restart: always
+    stop_grace_period: 2m
