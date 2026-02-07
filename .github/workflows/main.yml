@@ -3,8 +3,6 @@ name: Build CCTV APK
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   build:
@@ -13,22 +11,24 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Ensures all history is pulled
+
+    # Debug step: This shows you exactly what GitHub sees
+    - name: List Files
+      run: ls -R
 
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
-        cache: gradle
+        # Removing the cache temporarily helps bypass the "No file matched" error
+        # cache: gradle 
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+      # If your gradlew is in a subfolder, use: chmod +x MyFolder/gradlew
 
     - name: Build with Gradle
       run: ./gradlew assembleDebug
-
-    - name: Upload APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: cctv-debug-app
-        path: app/build/outputs/apk/debug/app-debug.apk
